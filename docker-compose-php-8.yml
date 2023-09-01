@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+
+    # PHP service
+    app:
+        image: php8fpm
+        container_name: php-app
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        networks:
+            - app-network
+            
+networks:
+    app-network:
+        driver: bridge

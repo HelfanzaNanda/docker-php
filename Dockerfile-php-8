@@ -1,0 +1,26 @@
+FROM php:8.0.0rc1-fpm
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y git
+
+# Install PHP extensions
+RUN apt-get update && \
+    apt-get install libldap2-dev libonig-dev libpq-dev libcurl4-openssl-dev libzip-dev sqlite3 libsqlite3-dev -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
+	docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
+
+RUN apt-get update \
+    && docker-php-ext-install \
+		ldap \
+		curl \
+        mbstring \
+        pdo_mysql \
+        pdo_pgsql \
+        pdo \
+        pgsql \
+        zip \
+        pdo_sqlite
+
+# php.ini
+ADD data/php.ini /usr/local/etc/php/php.ini
